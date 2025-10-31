@@ -5,3 +5,4 @@ This lab demonstrates the installation and configuration of Sysmon on two machin
 - DC01
 
 It includes step-by-step setup instructions, screenshots, exported logs, and configurations.
+ 
