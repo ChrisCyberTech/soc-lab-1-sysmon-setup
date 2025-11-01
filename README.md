@@ -97,4 +97,32 @@ Copy code
 
 ---
 
+## 🔹 System 2: DC01 (Domain Controller)
+
+### ✅ Sysmon Installation & Validation
+| Task | Status | Evidence |
+|-------|--------|----------|
+| Placed Sysmon and config into `C:\Tools\Sysmon` | ✅ | Screenshot |
+| Installed Sysmon using config (`-accepteula -i sysmonconfig.xml`) | ✅ | Screenshot |
+| Confirmed Sysmon service running (`Get-Service sysmon64a`) | ✅ | Screenshot |
+| Verified config loaded (`.\Sysmon64a.exe -c`) | ✅ | `SysmonVersion` text file |
+
+### ✅ Event Verification (Sysmon Operational Log)
+| Event ID | Purpose | Confirmed | Notes |
+|----------|----------|-----------|-------|
+| **1** | Process Create | ✅ | Seen after creating `testfile.txt` |
+| **3** | Network Connection | ✅ | Logged after launching Edge browser |
+| **11** | File Create | ❌ *Skipped* | (Not required for this host) |
+
+### 🗂️ Evidence Collected (DC01)
+| File | Description |
+|-------|-------------|
+| `SysmonVersion` | Output of `.\Sysmon64a.exe -c` |
+| `testfile.txt` | Trigger file for Event 1 |
+| `Sysmon-Operational.evtx` | Export of Sysmon event log |
+
+📁 **Evidence Path:**  
+`C:\Lab\SOC1\Evidence\`
+
+---
 🔧 *Built as part of a growing security analyst portfolio showcasing endpoint telemetry, log handling, and detection engineering fundamentals.*
