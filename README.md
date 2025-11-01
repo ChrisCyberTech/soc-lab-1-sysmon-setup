@@ -4,9 +4,9 @@
 Install, configure, and validate **Sysmon** logging on two Windows endpoints (**Workstation01** and **DC01**) as the foundation for future labs involving Windows Event Forwarding (WEF) and SIEM ingestion.
 
 This lab demonstrates:
-- Proper Sysmon deployment
-- Event validation (ProcessCreate, FileCreate, NetworkConnect, DNS Query, etc.)
-- Export of raw `.evtx` event logs for offline analysis
+- Proper Sysmon deployment and configuration
+- Event validation (ProcessCreate, NetworkConnect, DNS Query, etc.)
+- Export of raw `.evtx` for offline analysis
 - Evidence collection for security portfolio documentation
 
 ---
@@ -30,27 +30,92 @@ This lab demonstrates:
 | A4 | ✅ | Verified Sysmon service is running |
 | A5 | ✅ | Enabled **Sysmon Operational** event log |
 | A6 | ✅ | Captured Sysmon version + config hash |
-| A7 | ✅ | Generated test events (ProcessCreate, FileCreate, NetworkConnect) |
-| A8 | ✅ | Exported Sysmon-Operational.evtx log |
-| A9 | ✅ | Collected artifacts into Evidence folder |
+| A7 | ✅ | Generated test events (ProcessCreate, DNS, NetworkConnect) |
+| A8 | ✅ | Exported Sysmon Operational log (`.evtx`) |
+| A9 | ✅ | Collected artifacts in Evidence folder |
 
 ---
 
-### 📂 Workstation01 Artifacts
+## 🖼️ Key Screenshots (Workstation01)
+
+**Folder Structure Created**  
+![Workstation01 Create Folders](./SOC1/Workstation01/Screenshots/SOC1-01_Workstation01_CreateFolders.png)
+
+**Sysmon Install Command Executed Successfully**  
+![Workstation01 Install Command](./SOC1/Workstation01/Screenshots/SOC1-03_Workstation01_InstallCommand.png)
+
+**Event Log for Sysmon Enabled & Active**  
+![Workstation01 Event Log Enabled](./SOC1/Workstation01/Screenshots/SOC1-05_Workstation01_EventLogEnabled.png)
+
+**Sysmon Version & Config Hash Validated**  
+![Workstation01 Sysmon Version](./SOC1/Workstation01/Screenshots/SOC1-06_Workstation01_SysmonVersion.png)
+
+---
+
+## 🗂️ Workstation01 Artifacts
 
 | File | Purpose |
 |------|---------|
-| `Sysmon-Operational.evtx` | Raw exported Sysmon log |
-| `SysmonVersion.txt` | Version + config hash output |
-| `sysmonconfig.xml` | Config ruleset in use |
-| `testfile.txt` | Generated FileCreate event |
-| `LocaleMetaData` | Auto-generated metadata folder |
+| `Sysmon-Operational.evtx` | Raw exported Sysmon event log |
+| `SysmonVersion.txt` | Output of version + config hash |
+| `sysmonconfig.xml` | Config ruleset in effect |
+| `testfile.txt` | FileCreate event (trigger file) |
 
-📁 **Path:** `C:\Lab\SOC1\Evidence\`
+📁 **Location:** `C:\Lab\SOC1\Evidence\`
 
 ---
 
-### 🖼️ Screenshot Index (Workstation01)
+## 🔹 System 2: DC01 (Domain Controller)
+
+### ✅ DC01 Progress Checklist
+
+| Step | Status | Description |
+|------|--------|-------------|
+| B1 | ✅ | Created `C:\Tools\Sysmon` and `C:\Lab\SOC1\Evidence` folders |
+| B2 | ✅ | Placed Sysmon executable + config file |
+| B3 | ✅ | Installed Sysmon using config |
+| B4 | ✅ | Verified Sysmon service is running |
+| B5 | ✅ | Enabled **Sysmon Operational** event log |
+| B6 | ✅ | Captured Sysmon version + config hash |
+| B7 | ✅ | Generated test events (ProcessCreate, NetworkConnect) |
+| B8 | ✅ | Exported Sysmon Operational log |
+| B9 | ✅ | Collected artifacts in Evidence folder |
+
+---
+
+## 🖼️ Key Screenshots (DC01)
+
+**Folder Structure Created**  
+![DC01 Create Folders](./SOC1/DC01/Screenshots/SOC1-01_DC01_CreateFolders.png)
+
+**Sysmon Install Command Executed Successfully**  
+![DC01 Install Command](./SOC1/DC01/Screenshots/SOC1-03_DC01_InstallCommand.png)
+
+**Event Log for Sysmon Enabled & Active**  
+![DC01 Event Log Enabled](./SOC1/DC01/Screenshots/SOC1-05_DC01_EventLogEnabled.png)
+
+**Sysmon Version & Config Hash Validated**  
+![DC01 Sysmon Version](./SOC1/DC01/Screenshots/SOC1-06_DC01_SysmonVersion.png)
+
+---
+
+## 🗂️ DC01 Artifacts
+
+| File | Description |
+|------|-------------|
+| `SysmonVersion` | Output of `.\Sysmon64a.exe -c` |
+| `testfile.txt` | Trigger file for event logging |
+| `Sysmon-Operational.evtx` | Export of Operational log |
+
+📁 **Location:** `C:\Lab\SOC1\Evidence\`
+
+🔎 Note: Sysmon FileCreate (Event ID 11) was filtered out by config on DC01 — not required for this lab.
+
+---
+
+## 📜 Full Screenshot Index
+
+### Workstation01
 
 SOC1-01_Workstation01_CreateFolders.png
 SOC1-02_Workstation01_SysmonFiles.png
@@ -63,47 +128,10 @@ SOC1-08_Workstation01_TestEvents.png
 SOC1-09_Workstation01_ExportedLog.png
 SOC1-10_Workstation01_ArtifactsFolder.png
 
-yaml
+shell
+Copy code
 
----
-
-## 🔹 System 2: DC01 (Domain Controller)
-
-### ✅ Sysmon Installation & Validation
-
-| Task | Status | Evidence |
-|-------|--------|----------|
-| Created folders under `C:\Tools\Sysmon` and `C:\Lab\SOC1\Evidence` | ✅ | Screenshot |
-| Placed Sysmon + config into folder | ✅ | Screenshot |
-| Installed Sysmon using config (`-accepteula -i sysmonconfig.xml`) | ✅ | Screenshot |
-| Confirmed Sysmon service running (`Get-Service sysmon64a`) | ✅ | Screenshot |
-| Verified config + schema (`.\Sysmon64a.exe -c`) | ✅ | `SysmonVersion` file |
-
----
-
-### ✅ Event Verification (Sysmon Operational Log)
-
-| Event ID | Purpose | Confirmed | Notes |
-|----------|----------|-----------|-------|
-| **1** | Process Create | ✅ | Seen after running PowerShell + test file |
-| **3** | Network Connect | ✅ | Triggered by Edge browser launch |
-| **11** | File Create | ❌ *(skipped for DC01)* | Not required |
-
----
-
-### 🗂️ Evidence Collected (DC01)
-
-| File | Description |
-|-------|-------------|
-| `SysmonVersion` | Output of `.\Sysmon64a.exe -c` |
-| `testfile.txt` | Trigger file for ProcessCreate test |
-| `Sysmon-Operational.evtx` | Exported Sysmon log |
-
-📁 **Path:** `C:\Lab\SOC1\Evidence\`
-
----
-
-### 🖼️ Screenshot Index (DC01)
+### DC01
 
 SOC1-01_DC01_CreateFolders.png
 SOC1-02_DC01_SysmonFiles.png
@@ -116,6 +144,7 @@ SOC1-08_DC01_TestEvents.png
 SOC1-09_DC01_ExportedLog.png
 
 yaml
+Copy code
 
 ---
 
@@ -129,14 +158,4 @@ yaml
 
 ---
 
-## 📎 Notes
-
-- Sysmon version deployed: **v15.15**
-- Schema validated: **4.90**
-- Config based on SwiftOnSecurity ruleset
-- Logs confirmed for Process, Network, and DNS activity
-- All evidence stored locally and committed to GitHub
-
----
-
-🔧 *Built as part of an ongoing security analyst portfolio demonstrating endpoint telemetry, log handling, and detection engineering fundamentals.*
+🔧 *Built as part of an ongoing security analyst portfolio showcasing endpoint telemetry, defensive monitoring, and detection engineering fundamentals.*
