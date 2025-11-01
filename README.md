@@ -4,8 +4,8 @@
 Install, configure, and validate **Sysmon** logging on two Windows endpoints (**Workstation01** and **DC01**) as the foundation for later Windows Event Forwarding (WEF) and SIEM ingestion.
 
 This lab demonstrates:
-- Proper Sysmon deployment
-- Event validation (ProcessCreate, FileCreate, NetworkConnect, DNS Query, etc.)
+- Proper Sysmon deployment and configuration
+- Event validation (ProcessCreate, NetworkConnect, DNS Query, etc.)
 - Export of raw `.evtx` event logs for analysis
 - Evidence collection for security portfolio documentation
 
@@ -30,32 +30,22 @@ This lab demonstrates:
 | A4 | ✅ | Verified Sysmon service is running |
 | A5 | ✅ | Enabled **Sysmon Operational** event log |
 | A6 | ✅ | Captured Sysmon version + config hash |
-| A7 | ✅ | Generated test events (ProcessCreate, FileCreate, NetworkConnect) |
+| A7 | ✅ | Generated test events (ProcessCreate, NetworkConnect, DNS Query) |
 | A8 | ✅ | Exported Sysmon-Operational.evtx log |
 | A9 | ✅ | Collected artifacts into Evidence folder |
 
 ---
 
-## 📂 Workstation01 Artifacts
+## 🖼️ Key Screenshots (Workstation01)
 
-| File | Purpose |
-|------|---------|
-| `Sysmon-Operational.evtx` | Raw exported Sysmon log |
-| `SysmonVersion.txt` | Version + config hash output |
-| `sysmonconfig.xml` | Config ruleset in use |
-| `testfile.txt` | Generated FileCreate event |
-| `LocaleMetaData` | Auto-generated metadata folder |
+| Description | Screenshot |
+|-------------|------------|
+| Sysmon install command executed successfully | ![SOC1-03_Workstation01_InstallCommand](./SOC1/Workstation01/Screenshots/SOC1-03_Workstation01_InstallCommand.png) |
+| Sysmon event log showing test events | ![SOC1-08_Workstation01_TestEvents](./SOC1/Workstation01/Screenshots/SOC1-08_Workstation01_TestEvents.png) |
+| Final Workstation01 evidence folder | ![SOC1-10_Workstation01_ArtifactsFolder](./SOC1/Workstation01/Screenshots/SOC1-10_Workstation01_ArtifactsFolder.png) |
 
-Artifacts stored in:
-
-C:\Lab\SOC1\Evidence\
-
-yaml
-Copy code
-
----
-
-## 🖼️ Screenshot Index (Workstation01)
+<details>
+<summary><strong>Click to view full Workstation01 screenshot index</strong></summary>
 
 SOC1-01_Workstation01_CreateFolders.png
 SOC1-02_Workstation01_SysmonFiles.png
@@ -71,58 +61,98 @@ SOC1-10_Workstation01_ArtifactsFolder.png
 yaml
 Copy code
 
----
-
-## 🔜 Next Steps
-
-### ✅ Continue Sysmon setup on: `DC01`
-
-### 📌 Upcoming Labs in SOC Series
-
-| Lab | Title | Focus |
-|------|-------|-------|
-| SOC Lab 2 | Windows Event Forwarding (WEF) | Forward Sysmon logs from endpoints → DC |
-| SOC Lab 3 | SIEM Ingest | Send forwarded logs into SIEM (Splunk, Elastic, LimaCharlie, etc.) |
-| SOC Lab 4 | Detection Lab | Write Sigma rules and alert on Sysmon events |
+</details>
 
 ---
 
-## 📎 Notes
+## 🗂️ Workstation01 Artifacts
 
-- Sysmon version installed: **v15.15**
-- Schema version validated: **4.90**
-- Config used: SwiftOnSecurity-based ruleset
-- DNS, Network, Process, and File events confirmed
-- All screenshots and evidence stored locally and in GitHub repo
+| File | Purpose |
+|------|---------|
+| `Sysmon-Operational.evtx` | Raw exported Sysmon log |
+| `SysmonVersion.txt` | Version + config hash output |
+| `sysmonconfig.xml` | Config ruleset in use |
+| `testfile.txt` | Trigger file for event logging |
+
+Artifacts stored in:  
+C:\Lab\SOC1\Evidence\
+
+yaml
+Copy code
 
 ---
 
 ## 🔹 System 2: DC01 (Domain Controller)
 
-### ✅ Sysmon Installation & Validation
-| Task | Status | Evidence |
-|-------|--------|----------|
-| Placed Sysmon and config into `C:\Tools\Sysmon` | ✅ | Screenshot |
-| Installed Sysmon using config (`-accepteula -i sysmonconfig.xml`) | ✅ | Screenshot |
-| Confirmed Sysmon service running (`Get-Service sysmon64a`) | ✅ | Screenshot |
-| Verified config loaded (`.\Sysmon64a.exe -c`) | ✅ | `SysmonVersion` text file |
+### ✅ DC01 Progress Checklist
 
-### ✅ Event Verification (Sysmon Operational Log)
-| Event ID | Purpose | Confirmed | Notes |
-|----------|----------|-----------|-------|
-| **1** | Process Create | ✅ | Seen after creating `testfile.txt` |
-| **3** | Network Connection | ✅ | Logged after launching Edge browser |
-| **11** | File Create | ❌ *Skipped* | (Not required for this host) |
-
-### 🗂️ Evidence Collected (DC01)
-| File | Description |
-|-------|-------------|
-| `SysmonVersion` | Output of `.\Sysmon64a.exe -c` |
-| `testfile.txt` | Trigger file for Event 1 |
-| `Sysmon-Operational.evtx` | Export of Sysmon event log |
-
-📁 **Evidence Path:**  
-`C:\Lab\SOC1\Evidence\`
+| Step | Status | Description |
+|------|--------|-------------|
+| B1 | ✅ | Created `C:\Tools\Sysmon` and `C:\Lab\SOC1\Evidence` folders |
+| B2 | ✅ | Placed Sysmon executable + config file |
+| B3 | ✅ | Installed Sysmon using config |
+| B4 | ✅ | Verified Sysmon service is running |
+| B5 | ✅ | Enabled **Sysmon Operational** event log |
+| B6 | ✅ | Captured Sysmon version + config hash |
+| B7 | ✅ | Generated test events (ProcessCreate, NetworkConnect) |
+| B8 | ✅ | Exported Sysmon-Operational.evtx log |
+| B9 | ✅ | Collected artifacts into Evidence folder |
 
 ---
+
+## 🖼️ Key Screenshots (DC01)
+
+| Description | Screenshot |
+|-------------|------------|
+| Sysmon install command executed successfully | ![SOC1-03_DC01_InstallCommand](./SOC1/DC01/Screenshots/SOC1-03_DC01_InstallCommand.png) |
+| Sysmon event log showing test events | ![SOC1-08_DC01_TestEvents](./SOC1/DC01/Screenshots/SOC1-08_DC01_TestEvents.png) |
+| Final DC01 evidence folder | ![SOC1-10_DC01_ArtifactsFolder](./SOC1/DC01/Screenshots/SOC1-10_DC01_ArtifactsFolder.png) |
+
+<details>
+<summary><strong>Click to view full DC01 screenshot index</strong></summary>
+
+SOC1-01_DC01_CreateFolders.png
+SOC1-02_DC01_SysmonFiles.png
+SOC1-03_DC01_InstallCommand.png
+SOC1-04_DC01_ServiceRunning.png
+SOC1-05_DC01_EventLogEnabled.png
+SOC1-06_DC01_SysmonVersion.png
+SOC1-07_DC01_ConfigDump.png
+SOC1-08_DC01_TestEvents.png
+SOC1-09_DC01_ExportedLog.png
+SOC1-10_DC01_ArtifactsFolder.png
+
+yaml
+
+</details>
+
+---
+
+## 🗂️ DC01 Artifacts
+
+| File | Description |
+|------|-------------|
+| `SysmonVersion` | Output of `.\Sysmon64a.exe -c` |
+| `testfile.txt` | Trigger file for event logging |
+| `Sysmon-Operational.evtx` | Exported Sysmon event log |
+
+Artifacts stored in:  
+C:\Lab\SOC1\Evidence\
+
+yaml
+
+*Note: Event ID 11 (FileCreate) was not logged on DC01 because it was filtered out by the active Sysmon config.*
+
+---
+
+## 🔜 Next Steps
+
+| Lab | Title | Focus |
+|------|-------|-------|
+| SOC Lab 2 | Windows Event Forwarding (WEF) | Forward Sysmon logs from endpoints → DC |
+| SOC Lab 3 | SIEM Ingest | Send forwarded logs into SIEM |
+| SOC Lab 4 | Detection Lab | Write Sigma rules and trigger alerts in SIEM |
+
+---
+
 🔧 *Built as part of a growing security analyst portfolio showcasing endpoint telemetry, log handling, and detection engineering fundamentals.*
